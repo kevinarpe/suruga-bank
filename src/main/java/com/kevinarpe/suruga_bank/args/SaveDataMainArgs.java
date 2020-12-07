@@ -5,6 +5,7 @@ import com.googlecode.kevinarpe.papaya.argument.IntArgs;
 import com.googlecode.kevinarpe.papaya.argument.StringArgs;
 import com.googlecode.kevinarpe.papaya.java_mail.AlwaysTrustSSL;
 import com.googlecode.kevinarpe.papaya.java_mail.EmailMessageAddress;
+import com.googlecode.kevinarpe.papaya.web.chrome_dev_tools.IsHeadless;
 
 import javax.annotation.Nullable;
 import java.io.File;
@@ -15,6 +16,7 @@ import java.io.File;
 public final class SaveDataMainArgs
 extends AbstractArgs {
 
+    private static final String CHROME_HEADLESS = "--chrome-headless";
     private static final String DATA_DIR = "--data-dir";
     private static final String BRANCH_NUMBER = "--branch-number";
     private static final String ACCOUNT_NUMBER = "--account-number";
@@ -28,6 +30,17 @@ extends AbstractArgs {
 
     public SaveDataMainArgs() {
         // Empty
+    }
+
+    @Parameter(
+        names = CHROME_HEADLESS,
+        required = false,
+        description = "Display help"
+    )
+    private boolean isChromeHeadless = false;
+
+    public IsHeadless isChromeHeadless() {
+        return isChromeHeadless ? IsHeadless.YES : IsHeadless.NO;
     }
 
     @Parameter(names = DATA_DIR, required = true)
@@ -141,11 +154,11 @@ extends AbstractArgs {
     public void
     validate() {
 
-        StringArgs.checkNotEmptyOrWhitespace(dataDirPathname, "dataDirPathname");
-        StringArgs.checkNotEmptyOrWhitespace(branchNumber, "branchNumber");
-        StringArgs.checkNotEmptyOrWhitespace(accountNumber, "accountNumber");
-        StringArgs.checkNotEmptyOrWhitespace(cashCardPasswordNumber, "cashCardPasswordNumber");
-        StringArgs.checkNotEmptyOrWhitespace(accountHolderName, "accountHolderName");
+        StringArgs.checkNotEmptyOrWhitespace(dataDirPathname, DATA_DIR);
+        StringArgs.checkNotEmptyOrWhitespace(branchNumber, BRANCH_NUMBER);
+        StringArgs.checkNotEmptyOrWhitespace(accountNumber, ACCOUNT_NUMBER);
+        StringArgs.checkNotEmptyOrWhitespace(cashCardPasswordNumber, CASH_CARD_PASSWORD_NUMBER);
+        StringArgs.checkNotEmptyOrWhitespace(accountHolderName, ACCOUNT_HOLDER_NAME);
         StringArgs.checkNotEmptyOrWhitespace(smtpHost, SMTP_HOST);
         IntArgs.checkMinValue(smtpPort, 1, SMTP_PORT);
         if ((null == nullableSmtpUsername) != (null == nullableSmtpPassword)) {

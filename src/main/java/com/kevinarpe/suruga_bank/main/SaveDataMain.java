@@ -10,7 +10,6 @@ import com.googlecode.kevinarpe.papaya.java_mail.JavaMailSessionBuilderFactory;
 import com.googlecode.kevinarpe.papaya.java_mail.TextMimeSubType;
 import com.googlecode.kevinarpe.papaya.logging.slf4j.LoggerLevel;
 import com.googlecode.kevinarpe.papaya.web.chrome_dev_tools.Chrome;
-import com.googlecode.kevinarpe.papaya.web.chrome_dev_tools.IsHeadless;
 import com.kevinarpe.suruga_bank.AppContext;
 import com.kevinarpe.suruga_bank.AppContextImp;
 import com.kevinarpe.suruga_bank.args.CommandLineArguments;
@@ -88,7 +87,7 @@ public final class SaveDataMain {
 
         final ZonedDateTime asOf = ZonedDateTime.now();
 
-        final String accountsHtml = _getAccountsHtml(appContext, surugaBankWebCredentials, asOf);
+        final String accountsHtml = _getAccountsHtml(args, appContext, surugaBankWebCredentials, asOf);
 
         final AccountsWebPageParserService.Result result =
             appContext.getAccountsWebPageParserService().parse(accountsHtml);
@@ -98,14 +97,15 @@ public final class SaveDataMain {
     }
 
     private static String
-    _getAccountsHtml(AppContext appContext,
+    _getAccountsHtml(SaveDataMainArgs args,
+                     AppContext appContext,
                      SurugaBankWebCredentials surugaBankWebCredentials,
                      ZonedDateTime asOf)
     throws Exception {
 
         final Chrome chrome =
             appContext.getChromeLauncherService().launchChrome(
-                IsHeadless.NO,
+                args.isChromeHeadless(),
                 appContext.getRetryStrategyFactory());
 
         final SurugaBankWebPageService.Result result =
