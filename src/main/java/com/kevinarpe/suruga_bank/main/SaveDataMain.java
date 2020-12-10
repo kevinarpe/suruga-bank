@@ -3,7 +3,6 @@ package com.kevinarpe.suruga_bank.main;
 import com.googlecode.kevinarpe.papaya.exception.ThrowableUtils;
 import com.googlecode.kevinarpe.papaya.java_mail.EmailMessageAddressListType;
 import com.googlecode.kevinarpe.papaya.java_mail.EmailMessageAddressType;
-import com.googlecode.kevinarpe.papaya.java_mail.EmailMessageBuilder;
 import com.googlecode.kevinarpe.papaya.java_mail.JavaMailSession;
 import com.googlecode.kevinarpe.papaya.java_mail.JavaMailSessionBuilder;
 import com.googlecode.kevinarpe.papaya.java_mail.JavaMailSessionBuilderFactory;
@@ -45,14 +44,14 @@ public final class SaveDataMain {
         catch (Exception e) {
             logger.error("Unexpected error", e);
 
-            final EmailMessageBuilder b = javaMailSession.emailMessageBuilder();
-            b.address(EmailMessageAddressType.FROM, args.emailAddress());
-            b.addressSet(EmailMessageAddressListType.TO).add(args.emailAddress());
-            b.subject("Suruga Bank Save Data: Unexpected error");
-            final String eStr = ThrowableUtils.toStringWithStackTrace(e);
-            b.body(TextMimeSubType.PLAIN, eStr);
+            final MimeMessage m =
+                javaMailSession.emailMessageBuilder()
+                    .address(EmailMessageAddressType.FROM, args.emailAddress())
+                    .addToAddressSet(EmailMessageAddressListType.TO, args.emailAddress())
+                    .subject("Suruga Bank Save Data: Unexpected error")
+                    .body(TextMimeSubType.PLAIN, ThrowableUtils.toStringWithStackTrace(e))
+                    .build();
 
-            final MimeMessage m = b.build();
             javaMailSession.sendMessage(m);
 
             System.exit(1);  // non-zero / failure

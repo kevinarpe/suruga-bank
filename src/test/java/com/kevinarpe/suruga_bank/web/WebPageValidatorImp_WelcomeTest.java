@@ -1,5 +1,6 @@
 package com.kevinarpe.suruga_bank.web;
 
+import com.googlecode.kevinarpe.papaya.web.jericho_html_parser.JerichoHtmlParserServiceImp;
 import com.kevinarpe.suruga_bank.TestGlobals;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;

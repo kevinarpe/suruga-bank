@@ -42,7 +42,6 @@ implements DSLContextService {
     selectExactlyOne(ResultQuery<TRecord> query)
     throws Exception {
 
-
         final Result<TRecord> result = _selectMany(query);
         final int size = result.size();
         switch (size) {

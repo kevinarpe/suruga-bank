@@ -1,7 +1,10 @@
 package com.kevinarpe.suruga_bank.web;
 
-import com.google.common.collect.ImmutableList;
 import com.googlecode.kevinarpe.papaya.argument.ObjectArgs;
+import com.googlecode.kevinarpe.papaya.web.jericho_html_parser.HtmlElementTag;
+import com.googlecode.kevinarpe.papaya.web.jericho_html_parser.JerichoHtmlAttributesMatcherImp;
+import com.googlecode.kevinarpe.papaya.web.jericho_html_parser.JerichoHtmlParserService;
+import com.googlecode.kevinarpe.papaya.web.jericho_html_parser.JerichoHtmlSource;
 import net.htmlparser.jericho.Element;
 
 /**
@@ -34,43 +37,37 @@ implements WebPageValidator {
 
         final Element formElement =
             jerichoHtmlParserService.getElementByTagAndAttributes(source, source.source, HtmlElementTag.FORM,
-                ImmutableList.of(
-                    JerichoHtmlAttributeMatcherImp.withValue("method", "post"),
-                    JerichoHtmlAttributeMatcherImp.withValue("action", "/cb/IBGate"),
-                    JerichoHtmlAttributeMatcherImp.withValue("name", "LoginForm")));
+                JerichoHtmlAttributesMatcherImp.withNonEmptyValue("method", "post")
+                    .and(JerichoHtmlAttributesMatcherImp.withNonEmptyValue("action", "/cb/IBGate"))
+                    .and(JerichoHtmlAttributesMatcherImp.withNonEmptyValue("name", "LoginForm")));
 
         final Element branchNumTextInputElement =
             jerichoHtmlParserService.getElementByTagAndAttributes(source, formElement, HtmlElementTag.INPUT,
-                ImmutableList.of(
-                    JerichoHtmlAttributeMatcherImp.withValue("type", "text"),
-                    JerichoHtmlAttributeMatcherImp.withValue("name", "BRA_NUM")));
+                JerichoHtmlAttributesMatcherImp.withNonEmptyValue("type", "text")
+                    .and(JerichoHtmlAttributesMatcherImp.withNonEmptyValue("name", "BRA_NUM")));
 
         final Element accountTypeRadioInputElement =
             jerichoHtmlParserService.getElementByTagAndAttributes(source, formElement, HtmlElementTag.INPUT,
-                ImmutableList.of(
-                    JerichoHtmlAttributeMatcherImp.withValue("type", "radio"),
-                    JerichoHtmlAttributeMatcherImp.withValue("name", "ACCT_TYPE_CHECKED"),
-                    JerichoHtmlAttributeMatcherImp.withValue("id", "ACCT_TYPE_CHECKED0"),
-                    JerichoHtmlAttributeMatcherImp.withValue("value", "100000JPY"),
-                    JerichoHtmlAttributeMatcherImp.withValue("checked", "checked")));
+                JerichoHtmlAttributesMatcherImp.withNonEmptyValue("type", "radio")
+                    .and(JerichoHtmlAttributesMatcherImp.withNonEmptyValue("name", "ACCT_TYPE_CHECKED"))
+                    .and(JerichoHtmlAttributesMatcherImp.withNonEmptyValue("id", "ACCT_TYPE_CHECKED0"))
+                    .and(JerichoHtmlAttributesMatcherImp.withNonEmptyValue("value", "100000JPY"))
+                    .and(JerichoHtmlAttributesMatcherImp.withNonEmptyValue("checked", "checked")));
 
         final Element accountNumTextInputElement =
             jerichoHtmlParserService.getElementByTagAndAttributes(source, formElement, HtmlElementTag.INPUT,
-                ImmutableList.of(
-                    JerichoHtmlAttributeMatcherImp.withValue("type", "text"),
-                    JerichoHtmlAttributeMatcherImp.withValue("name", "ACCT_NUM")));
+                JerichoHtmlAttributesMatcherImp.withNonEmptyValue("type", "text")
+                    .and(JerichoHtmlAttributesMatcherImp.withNonEmptyValue("name", "ACCT_NUM")));
 
         final Element cashCardCodePasswordInputElement =
             jerichoHtmlParserService.getElementByTagAndAttributes(source, formElement, HtmlElementTag.INPUT,
-                ImmutableList.of(
-                    JerichoHtmlAttributeMatcherImp.withValue("type", "password"),
-                    JerichoHtmlAttributeMatcherImp.withValue("name", "MASK_CASH_CARD_PWD"),
-                    JerichoHtmlAttributeMatcherImp.withValue("id", "password1")));
+                JerichoHtmlAttributesMatcherImp.withNonEmptyValue("type", "password")
+                    .and(JerichoHtmlAttributesMatcherImp.withNonEmptyValue("name", "MASK_CASH_CARD_PWD"))
+                    .and(JerichoHtmlAttributesMatcherImp.withNonEmptyValue("id", "password1")));
 
         final Element accountHolderNameTextInputElement =
             jerichoHtmlParserService.getElementByTagAndAttributes(source, formElement, HtmlElementTag.INPUT,
-                ImmutableList.of(
-                    JerichoHtmlAttributeMatcherImp.withValue("type", "text"),
-                    JerichoHtmlAttributeMatcherImp.withValue("name", "ACCT_HLDR_FW")));
+                JerichoHtmlAttributesMatcherImp.withNonEmptyValue("type", "text")
+                    .and(JerichoHtmlAttributesMatcherImp.withNonEmptyValue("name", "ACCT_HLDR_FW")));
     }
 }

@@ -1,10 +1,15 @@
 package com.kevinarpe.suruga_bank.web;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.googlecode.kevinarpe.papaya.annotation.OutputParam;
 import com.googlecode.kevinarpe.papaya.annotation.ReadOnlyContainer;
 import com.googlecode.kevinarpe.papaya.argument.ObjectArgs;
 import com.googlecode.kevinarpe.papaya.exception.ExceptionThrower;
+import com.googlecode.kevinarpe.papaya.function.count.AtLeastCountMatcher;
+import com.googlecode.kevinarpe.papaya.web.jericho_html_parser.HtmlElementTag;
+import com.googlecode.kevinarpe.papaya.web.jericho_html_parser.JerichoHtmlParserService;
+import com.googlecode.kevinarpe.papaya.web.jericho_html_parser.JerichoHtmlSource;
 import com.kevinarpe.suruga_bank.AccountName;
 import net.htmlparser.jericho.Element;
 
@@ -48,9 +53,9 @@ implements WebPageValidator {
 
         final JerichoHtmlSource source = new JerichoHtmlSource(getWebPage().name(), html);
 
-        @ReadOnlyContainer
-        final List<Element> tableElementList =
-            jerichoHtmlParserService.getNonEmptyElementListByTag(source, source.source, HtmlElementTag.TABLE);
+        final ImmutableList<Element> tableElementList =
+            jerichoHtmlParserService.getElementListByTag(
+                source, source.source, HtmlElementTag.TABLE, AtLeastCountMatcher.ONE);
 
         if (4 != tableElementList.size()) {
 
@@ -81,9 +86,9 @@ implements WebPageValidator {
 
         final Element tableElement = tableElementList.get(0);
 
-        @ReadOnlyContainer
-        final List<Element> trElementList =
-            jerichoHtmlParserService.getNonEmptyElementListByTag(source, tableElement, HtmlElementTag.TR);
+        final ImmutableList<Element> trElementList =
+            jerichoHtmlParserService.getElementListByTag(
+                source, tableElement, HtmlElementTag.TR, AtLeastCountMatcher.ONE);
 
         final int trCount = trElementList.size();
         if (5 != trCount) {
@@ -91,8 +96,9 @@ implements WebPageValidator {
             throw exceptionThrower.throwCheckedException(Exception.class,
                 "Expected exactly five account table rows, but found %d", trCount);
         }
-        @ReadOnlyContainer
-        final List<Element> headerTdElementList = _getTdElementList(source, trElementList, HtmlElementTag.TH, 0);
+        final ImmutableList<Element> headerTdElementList =
+            _getTdElementList(source, trElementList, HtmlElementTag.TH, 0);
+
         _assertTdRenderedText(headerTdElementList, 0, "科目");
         _assertTdRenderedText(headerTdElementList, 1, "口座数");
         _assertTdRenderedText(headerTdElementList, 2, "残高");
@@ -100,8 +106,9 @@ implements WebPageValidator {
 
         for (int tri = 1; tri < trCount; ++tri) {
 
-            @ReadOnlyContainer
-            final List<Element> dataTdElementList = _getTdElementList(source, trElementList, HtmlElementTag.TD, tri);
+            final ImmutableList<Element> dataTdElementList =
+                _getTdElementList(source, trElementList, HtmlElementTag.TD, tri);
+
             final Element dataTdElement = dataTdElementList.get(0);
             final String accountName = dataTdElement.getRenderer().toString().stripLeading().stripTrailing();
 
@@ -124,9 +131,9 @@ implements WebPageValidator {
 
         final Element tableElement = tableElementList.get(1);
 
-        @ReadOnlyContainer
-        final List<Element> trElementList =
-            jerichoHtmlParserService.getNonEmptyElementListByTag(source, tableElement, HtmlElementTag.TR);
+        final ImmutableList<Element> trElementList =
+            jerichoHtmlParserService.getElementListByTag(
+                source, tableElement, HtmlElementTag.TR, AtLeastCountMatcher.ONE);
 
         final int trCount = trElementList.size();
         if (3 != trCount) {
@@ -134,8 +141,9 @@ implements WebPageValidator {
             throw exceptionThrower.throwCheckedException(Exception.class,
                 "Expected exactly three loan table rows, but found %d", trCount);
         }
-        @ReadOnlyContainer
-        final List<Element> headerTdElementList = _getTdElementList(source, trElementList, HtmlElementTag.TH, 0);
+        final ImmutableList<Element> headerTdElementList =
+            _getTdElementList(source, trElementList, HtmlElementTag.TH, 0);
+
         _assertTdRenderedText(headerTdElementList, 0, "科目");
         _assertTdRenderedText(headerTdElementList, 1, "口数");
         _assertTdRenderedText(headerTdElementList, 2, "借入額");
@@ -143,8 +151,9 @@ implements WebPageValidator {
 
         for (int tri = 1; tri < trCount; ++tri) {
 
-            @ReadOnlyContainer
-            final List<Element> dataTdElementList = _getTdElementList(source, trElementList, HtmlElementTag.TD, tri);
+            final ImmutableList<Element> dataTdElementList =
+                _getTdElementList(source, trElementList, HtmlElementTag.TD, tri);
+
             final Element dataTdElement = dataTdElementList.get(0);
             final String accountName = dataTdElement.getRenderer().toString().stripLeading().stripTrailing();
 
@@ -157,18 +166,17 @@ implements WebPageValidator {
         }
     }
 
-    @ReadOnlyContainer
-    private List<Element>
+    private ImmutableList<Element>
     _getTdElementList(JerichoHtmlSource source,
-                      List<Element> trElementList,
+                      ImmutableList<Element> trElementList,
                       HtmlElementTag thOrTdTag,
                       final int index)
     throws Exception {
 
         final Element trElement = trElementList.get(index);
-        @ReadOnlyContainer
-        final List<Element> tdElementList =
-            jerichoHtmlParserService.getNonEmptyElementListByTag(source, trElement, thOrTdTag);
+
+        final ImmutableList<Element> tdElementList =
+            jerichoHtmlParserService.getElementListByTag(source, trElement, thOrTdTag, AtLeastCountMatcher.ONE);
 
         if (4 != tdElementList.size()) {
 
@@ -179,8 +187,7 @@ implements WebPageValidator {
     }
 
     private void
-    _assertTdRenderedText(@ReadOnlyContainer
-                          List<Element> tdElementList,
+    _assertTdRenderedText(ImmutableList<Element> tdElementList,
                           final int index,
                           String renderedText)
     throws Exception {

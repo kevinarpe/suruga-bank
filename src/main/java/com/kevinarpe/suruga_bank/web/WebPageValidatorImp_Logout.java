@@ -1,9 +1,12 @@
 package com.kevinarpe.suruga_bank.web;
 
-import com.google.common.collect.ImmutableList;
 import com.googlecode.kevinarpe.papaya.annotation.EmptyStringAllowed;
 import com.googlecode.kevinarpe.papaya.argument.ObjectArgs;
 import com.googlecode.kevinarpe.papaya.exception.ExceptionThrower;
+import com.googlecode.kevinarpe.papaya.web.jericho_html_parser.HtmlElementTag;
+import com.googlecode.kevinarpe.papaya.web.jericho_html_parser.JerichoHtmlAttributesMatcherImp;
+import com.googlecode.kevinarpe.papaya.web.jericho_html_parser.JerichoHtmlParserService;
+import com.googlecode.kevinarpe.papaya.web.jericho_html_parser.JerichoHtmlSource;
 import net.htmlparser.jericho.Element;
 
 import java.util.regex.Pattern;
@@ -49,10 +52,9 @@ implements WebPageValidator {
 
         final Element submitElement =
             jerichoHtmlParserService.getElementByTagAndAttributes(source, source.source, HtmlElementTag.INPUT,
-                ImmutableList.of(
-                    JerichoHtmlAttributeMatcherImp.withValue("type", "submit"),
-                    JerichoHtmlAttributeMatcherImp.withValue("name", "ACT_doClose"),
-                    JerichoHtmlAttributeMatcherImp.withValue("value", "閉じる")));
+                JerichoHtmlAttributesMatcherImp.withNonEmptyValue("type", "submit")
+                    .and(JerichoHtmlAttributesMatcherImp.withNonEmptyValue("name", "ACT_doClose"))
+                    .and(JerichoHtmlAttributesMatcherImp.withNonEmptyValue("value", "閉じる")));
 /*
 スルガ銀行
 
